@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# Copyright (C) 2008 Oliver Krueger, Wiki++
+# Copyright (C) 2008 Oliver Krueger <oliver@wiki-one.net>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -12,17 +12,17 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #
 # For licensing info read LICENSE file in the TWiki root.
-package TWiki::Plugins::BrowserBoosterPlugin;
+package Foswiki::Plugins::BrowserBoosterPlugin;
 
 use strict;
 
-require TWiki::Func;    # The plugins API
-require TWiki::Plugins; # For the API version
+require Foswiki::Func;    # The plugins API
+require Foswiki::Plugins; # For the API version
 
 use vars qw( $VERSION $RELEASE $SHORTDESCRIPTION $pluginName $NO_PREFS_IN_TOPIC );
 
 $VERSION = '$Rev$';
-$RELEASE = '1.01';
+$RELEASE = '2008-12-27';
 $SHORTDESCRIPTION = 'Embeds js and css files into the page to reduce the number of http objects.';
 $NO_PREFS_IN_TOPIC = 1;
 $pluginName = 'BrowserBoosterPlugin';
@@ -33,8 +33,8 @@ sub initPlugin {
     my( $topic, $web, $user, $installWeb ) = @_;
 
     # check for Plugins.pm versions
-    if( $TWiki::Plugins::VERSION < 1.2 ) {
-        TWiki::Func::writeWarning( "Version mismatch between $pluginName and Plugins.pm" );
+    if( $Foswiki::Plugins::VERSION < 1.2 ) {
+        Foswiki::Func::writeWarning( "Version mismatch between $pluginName and Plugins.pm" );
         return 0;
     }
 
@@ -45,7 +45,7 @@ sub initPlugin {
 sub completePageHandler {
     #my ( $text, $header ) = @_;
 
-    TWiki::Func::writeDebug( "- ${pluginName}::completePageHandler()" ) if DEBUG;
+    Foswiki::Func::writeDebug( "- ${pluginName}::completePageHandler()" ) if DEBUG;
 
     # import javascript
     $_[0] =~ s/(<script\s+type=.text\/javascript.\s+src=[^>]+><\/script>)/&importJavascript($1)/gei;
@@ -78,7 +78,7 @@ sub importJavascript {
     $text    =~ m/src=["'](.*?)["']/i;
     my $file = $1;
     my $src  = $1;
-    $file    =~ s/.*$TWiki::cfg{PubUrlPath}/$TWiki::cfg{PubDir}/g;
+    $file    =~ s/.*$Foswiki::cfg{PubUrlPath}/$Foswiki::cfg{PubDir}/g;
 
     # read file
     my $fileContent = readFile( $file );
@@ -98,8 +98,8 @@ sub parseStylesheet {
 
 sub rewriteUrls {
     my ( $css, $base ) = @_;
-    my $host = $TWiki::cfg{DefaultUrlHost};
-    my $pub  = $TWiki::cfg{PubUrlPath};
+    my $host = $Foswiki::cfg{DefaultUrlHost};
+    my $pub  = $Foswiki::cfg{PubUrlPath};
 
     # rewrite /my/path/file.css
     $css =~ s/url\(["']?\/([^;]*?)["']?\)/url('$host\/$1')/g;
@@ -114,7 +114,7 @@ sub importStylesheet {
     my ( $url, $prefix, $suffix ) = @_;
     my $retval = "";
     my $file   = $url;
-    $file =~ s/.*$TWiki::cfg{PubUrlPath}/$TWiki::cfg{PubDir}/g;
+    $file =~ s/.*$Foswiki::cfg{PubUrlPath}/$Foswiki::cfg{PubDir}/g;
 
     if ( $file ) {
       my $fileContent = readFile( $file );

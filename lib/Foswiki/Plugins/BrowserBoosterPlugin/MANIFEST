@@ -1,0 +1,4 @@
+# Release manifest for BrowserBoosterPlugin
+data/System/BrowserBoosterPlugin.txt 0644 Documentation
+lib/Foswiki/Plugins/BrowserBoosterPlugin.pm 0644 Perl module
+
